@@ -6,7 +6,7 @@ namespace PMDDotNETCompilerTest
 {
 	public class DosCompiler
 	{
-		public static (string stdout, string stderr) Compile(string mmlFilePath, string tooldir)
+		public static (byte[]? binary, string stdout, string stderr) Compile(string mmlFilePath, string outputFileName, string tooldir)
 		{
 			var tooldirFull = Path.GetFullPath(tooldir);
 			var currentDir = Environment.CurrentDirectory;
@@ -35,7 +35,22 @@ namespace PMDDotNETCompilerTest
 					var stderr = p.StandardError.ReadToEnd();
 					p.WaitForExit();
 
-					return (stdout, stderr);
+					if (p.ExitCode == 0)
+					{
+						byte[] buffer;
+						using (var fs = new FileStream(outputFileName, FileMode.Open))
+						{
+							buffer = new byte[fs.Length];
+							fs.Read(buffer, 0, buffer.Length);
+						}
+						File.Delete(outputFileName);
+
+						return (buffer, stdout, stderr);
+					}
+					else
+					{
+						return (null, stdout, stderr);
+					}
 				}
 			}
 			finally
