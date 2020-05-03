@@ -42,6 +42,7 @@ namespace PMDDotNETCompilerTest
             using (var fs = new FileStream(fullpath, FileMode.Open))
             using (var ms = new MemoryStream())
             {
+                compiler.mcArgs = new string[] { "/v", fname };
                 var r = compiler.Compile(fs, ms, fnAppendFileReaderCallback);
                 ms.Flush();
 
