@@ -55,7 +55,7 @@ namespace PMDDotNETCompilerTest
             using (var sr = new StreamReader(sourceMML, Encoding.GetEncoding(932)))
             {
                 var srcText = sr.ReadToEnd();
-                var tags = compiler.GetTags(mmlFilePath, fnAppendFileReaderCallback);
+                var tags = compiler.GetTags(srcText, fnAppendFileReaderCallback);
                 if (tags != null)
                 {
                     foreach (var item in tags)
