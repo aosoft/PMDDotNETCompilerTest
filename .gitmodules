@@ -1,0 +1,3 @@
+[submodule "PMDDotNET"]
+	path = PMDDotNET
+	url = https://github.com/kuma4649/PMDDotNET.git
