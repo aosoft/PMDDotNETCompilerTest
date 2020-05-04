@@ -18,7 +18,7 @@ namespace UnitTestProject
 
             var r = DosCompiler.Compile(MML, "TEST.M2", DOSTOOLS);
             Trace.WriteLine(r.Log);
-            Assert.IsTrue(r.Succeed);
+            Assert.IsTrue(r.Status != CompileStatus.Warning);
             Assert.IsTrue(r.CompiledBinary != null);
         }
 
@@ -30,7 +30,7 @@ namespace UnitTestProject
             var r = DotnetCompiler.Compile(MML);
             Trace.WriteLine(r.outputFileName);
             Trace.WriteLine(r.result.Log);
-            Assert.IsTrue(r.result.Succeed);
+            Assert.IsTrue(r.result.Status != CompileStatus.Warning);
             Assert.IsTrue(r.result.CompiledBinary != null);
         }
 
