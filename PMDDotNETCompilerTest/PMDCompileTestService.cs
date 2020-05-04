@@ -16,28 +16,26 @@ namespace PMDDotNETCompilerTest
 
         public void SingleTest(string mmlFilePath, string tooldir)
         {
+            _logger.LogInformation("---- Test Start - {0}", mmlFilePath);
             try
             {
-                _logger.LogInformation("Test Start - {0}", mmlFilePath);
                 var dotnet = DotnetCompiler.Compile(mmlFilePath);
                 _logger.LogInformation(".NET Compile Result: {0}", dotnet.result.Status);
-                if (dotnet.result.Status != CompileStatus.Succeeded)
-                {
-                    _logger.LogInformation(dotnet.result.Log);
-                }
+                dotnet.result.WriteLog(_logger);
 
                 var dos = DosCompiler.Compile(mmlFilePath, dotnet.outputFileName, tooldir);
                 _logger.LogInformation("DOS Compile Result: {0}", dos.Status);
-                if (dos.Status != CompileStatus.Succeeded)
-                {
-                    _logger.LogInformation(dos.Log);
-                }
+                dos.WriteLog(_logger);
 
                 _logger.LogInformation("Compare Result: {0}", dotnet.result.Compare(dos));
             }
             catch(Exception e)
             {
                 _logger.LogError(e.StackTrace);
+            }
+            finally
+            {
+                _logger.LogInformation("---- Test End - {0}", mmlFilePath);
             }
         }
     }

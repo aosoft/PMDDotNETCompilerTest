@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.Extensions.Logging;
 
 namespace PMDDotNETCompilerTest
 {
@@ -8,6 +9,7 @@ namespace PMDDotNETCompilerTest
     {
         Succeeded = 0,
         Failed,
+        Exception,
         Warning
     }
 
@@ -31,7 +33,7 @@ namespace PMDDotNETCompilerTest
         {
             if (succeeded)
             {
-                if (log.IndexOf("Warning") < 0)
+                if (log.IndexOf("Warning", StringComparison.CurrentCultureIgnoreCase) < 0)
                 {
                     Status = CompileStatus.Succeeded;
                 }
@@ -42,10 +44,27 @@ namespace PMDDotNETCompilerTest
             }
             else
             {
-                Status = CompileStatus.Failed;
+                if (log.IndexOf("Exception", StringComparison.CurrentCultureIgnoreCase) < 0)
+                {
+                    Status = CompileStatus.Failed;
+                }
+                else
+                {
+                    Status = CompileStatus.Exception;
+                }
             }
             CompiledBinary = compiledBinary;
             Log = log;
+        }
+
+        public void WriteLog(ILogger logger)
+        {
+            switch (Status)
+            {
+                case CompileStatus.Failed: logger.LogError(Log); break;
+                case CompileStatus.Exception: logger.LogError(Log); break;
+                case CompileStatus.Warning: logger.LogWarning(Log); break;
+            }
         }
 
         public CompareResult Compare(CompileResult target)

@@ -32,7 +32,6 @@ namespace PMDDotNETCompilerTest
                 }
                 catch
                 {
-
                 }
                 return null;
             };
