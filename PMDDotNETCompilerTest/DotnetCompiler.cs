@@ -9,7 +9,7 @@ namespace PMDDotNETCompilerTest
 {
 	public class DotnetCompiler
 	{
-		public static (byte[]? binary, string outputFileName, string log) Compile(string mmlFilePath)
+		public static (CompileResult result, string outputFileName) Compile(string mmlFilePath)
 		{
             var log = new StringBuilder();
 			Log.writeLine = (level, msg) => log.AppendFormat("[{0,-7}] {1}\n", level, msg);
@@ -46,7 +46,7 @@ namespace PMDDotNETCompilerTest
                 var r = compiler.Compile(fs, ms, fnAppendFileReaderCallback);
                 ms.Flush();
 
-                return (r ? ms.ToArray() : null, outputFileName, log.ToString());
+                return (new CompileResult(succeeded: r, compiledBinary: ms?.ToArray(), log: log.ToString()), outputFileName);
             }
 		}
 

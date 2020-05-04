@@ -24,33 +24,33 @@ namespace PMDDotNETCompilerTest
                 {
                     Console.WriteLine(mml);
                     var dotnet = DotnetCompiler.Compile(mml);
-                    Console.WriteLine("Dotnet compile - {0}", dotnet.binary != null ? "OK" : "NG");
-                    if (dotnet.binary == null)
+                    Console.WriteLine("Dotnet compile - {0}", dotnet.result.CompiledBinary != null ? "OK" : "NG");
+                    if (dotnet.result.CompiledBinary == null)
                     {
-                        Console.WriteLine(dotnet.log);
+                        Console.WriteLine(dotnet.result.Log);
                     }
                     var dos = DosCompiler.Compile(mml, dotnet.outputFileName, tooldir);
-                    Console.WriteLine("DOS compile - {0}", dos.binary != null ? "OK" : "NG");
-                    if (dos.binary == null)
+                    Console.WriteLine("DOS compile - {0}", dos.CompiledBinary != null ? "OK" : "NG");
+                    if (dos.CompiledBinary == null)
                     {
-                        Console.WriteLine(dos.stdout);
+                        Console.WriteLine(dos.Log);
                     }
 
-                    if (dotnet.binary != null && dos.binary != null)
+                    if (dotnet.result.CompiledBinary != null && dos.CompiledBinary != null)
                     {
-                        int size = Math.Min(dotnet.binary.Length, dos.binary.Length);
+                        int size = Math.Min(dotnet.result.CompiledBinary.Length, dos.CompiledBinary.Length);
 
                         bool eq = true;
                         for (int i = 0; i < size; i++)
                         {
-                            if (dotnet.binary[i] != dos.binary[i])
+                            if (dotnet.result.CompiledBinary[i] != dos.CompiledBinary[i])
                             {
-                                Console.WriteLine("[{0:X4} {1:X2} -> {2:X2}", i, dos.binary[i], dotnet.binary[i]);
+                                Console.WriteLine("[{0:X4} {1:X2} -> {2:X2}", i, dos.CompiledBinary[i], dotnet.result.CompiledBinary[i]);
                                 eq = false;
                             }
                         }
 
-                        if (dotnet.binary.Length != dos.binary.Length)
+                        if (dotnet.result.CompiledBinary.Length != dos.CompiledBinary.Length)
                         {
                             Console.WriteLine("Binary Size is not equal");
                         }

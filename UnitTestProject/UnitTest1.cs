@@ -17,9 +17,9 @@ namespace UnitTestProject
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
 
             var r = DosCompiler.Compile(MML, "TEST.M2", DOSTOOLS);
-            Trace.WriteLine(r.stdout);
-            Trace.WriteLine(r.stderr);
-            Assert.IsTrue(r.binary != null);
+            Trace.WriteLine(r.Log);
+            Assert.IsTrue(r.Succeed);
+            Assert.IsTrue(r.CompiledBinary != null);
         }
 
         [TestMethod]
@@ -29,8 +29,9 @@ namespace UnitTestProject
 
             var r = DotnetCompiler.Compile(MML);
             Trace.WriteLine(r.outputFileName);
-            Trace.WriteLine(r.log);
-            Assert.IsTrue(r.binary != null);
+            Trace.WriteLine(r.result.Log);
+            Assert.IsTrue(r.result.Succeed);
+            Assert.IsTrue(r.result.CompiledBinary != null);
         }
 
         [TestMethod]
@@ -39,19 +40,19 @@ namespace UnitTestProject
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
 
             var r1 = DotnetCompiler.Compile(MML);
-            Assert.IsTrue(r1.binary != null);
+            Assert.IsTrue(r1.result.CompiledBinary != null);
             var r2 = DosCompiler.Compile(MML, r1.outputFileName, DOSTOOLS);
-            Assert.IsTrue(r2.binary != null);
+            Assert.IsTrue(r2.CompiledBinary != null);
 
-            if (r1.binary != null && r2.binary != null)
+            if (r1.result.CompiledBinary != null && r2.CompiledBinary != null)
             {
-                Assert.IsTrue(r1.binary.Length == r2.binary.Length);
+                Assert.IsTrue(r1.result.CompiledBinary.Length == r2.CompiledBinary.Length);
                 bool eq = true;
-                for (int i = 0; i < r1.binary.Length; i++)
+                for (int i = 0; i < r1.result.CompiledBinary.Length; i++)
                 {
-                    if (r1.binary[i] != r2.binary[i])
+                    if (r1.result.CompiledBinary[i] != r2.CompiledBinary[i])
                     {
-                        Trace.WriteLine(string.Format("[{0:X4} {1:X2} -> {2:X2}", i, r1.binary[i], r2.binary[i]));
+                        Trace.WriteLine(string.Format("[{0:X4} {1:X2} -> {2:X2}", i, r1.result.CompiledBinary[i], r2.CompiledBinary[i]));
                         eq = false;
                     }
                 }

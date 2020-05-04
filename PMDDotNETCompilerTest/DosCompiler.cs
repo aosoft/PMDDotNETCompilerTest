@@ -6,7 +6,7 @@ namespace PMDDotNETCompilerTest
 {
     public class DosCompiler
     {
-        public static (byte[]? binary, string stdout, string stderr) Compile(string mmlFilePath, string outputFileName, string tooldir)
+        public static CompileResult Compile(string mmlFilePath, string outputFileName, string tooldir)
         {
             var tooldirFull = Path.GetFullPath(tooldir);
             var currentDir = Environment.CurrentDirectory;
@@ -52,6 +52,7 @@ namespace PMDDotNETCompilerTest
 
                     try
                     {
+                        byte[]? compiledBinary = null;
                         if (p.ExitCode == 0 && outputFileName2 != null && File.Exists(outputFileName2))
                         {
                             byte[] buffer;
@@ -61,12 +62,14 @@ namespace PMDDotNETCompilerTest
                                 fs.Read(buffer, 0, buffer.Length);
                             }
 
-                            return (buffer, stdout, stderr);
+                            compiledBinary = buffer;
                         }
-                        else
-                        {
-                            return (null, stdout, stderr);
-                        }
+
+                        var log = (stdout?.Equals(stderr)).GetValueOrDefault() ?
+                            stdout :
+                            string.Format("stdout:{0}{1}{0}stderr:{2}", Environment.NewLine, stdout, stderr);
+
+                        return new CompileResult(succeeded: p.ExitCode == 0, compiledBinary: compiledBinary, log: log ?? string.Empty);
                     }
                     finally
                     {
