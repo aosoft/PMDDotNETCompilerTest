@@ -25,8 +25,16 @@ namespace PMDDotNETCompilerTest
                     Console.WriteLine(mml);
                     var dotnet = DotnetCompiler.Compile(mml);
                     Console.WriteLine("Dotnet compile - {0}", dotnet.binary != null ? "OK" : "NG");
+                    if (dotnet.binary == null)
+                    {
+                        Console.WriteLine(dotnet.log);
+                    }
                     var dos = DosCompiler.Compile(mml, dotnet.outputFileName, tooldir);
                     Console.WriteLine("DOS compile - {0}", dos.binary != null ? "OK" : "NG");
+                    if (dos.binary == null)
+                    {
+                        Console.WriteLine(dos.stdout);
+                    }
 
                     if (dotnet.binary != null && dos.binary != null)
                     {
