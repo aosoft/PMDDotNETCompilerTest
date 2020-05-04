@@ -29,12 +29,12 @@ namespace PMDDotNETCompilerTest
                 DosResult == CompileStatus.Succeeded;
 
             public bool IsAllowed =>
-                (CompareResult == CompareResult.Match || CompareResult == CompareResult.Match_NotEqualLength) &&
+                (CompareResult == CompareResult.Match || CompareResult == CompareResult.Match_NotEqualLength || CompareResult == CompareResult.Match_WithoutMemo) &&
                 DotNetResult == CompileStatus.Succeeded &&
                 DosResult == CompileStatus.Succeeded;
 
             public bool IsWarning =>
-                (CompareResult == CompareResult.Match || CompareResult == CompareResult.Match_NotEqualLength) &&
+                (CompareResult == CompareResult.Match || CompareResult == CompareResult.Match_NotEqualLength || CompareResult == CompareResult.Match_WithoutMemo) &&
                 (DotNetResult == CompileStatus.Succeeded || DotNetResult == CompileStatus.Warning &&
                 (DosResult == CompileStatus.Succeeded || DosResult == CompileStatus.Warning));
         }

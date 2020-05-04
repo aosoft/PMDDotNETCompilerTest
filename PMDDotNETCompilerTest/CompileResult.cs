@@ -18,7 +18,8 @@ namespace PMDDotNETCompilerTest
         Unspecified = 0,
         Match,
         Unmatch,
-        Match_NotEqualLength
+        Match_NotEqualLength,
+        Match_WithoutMemo
     }
 
     public class CompileResult
@@ -81,11 +82,21 @@ namespace PMDDotNETCompilerTest
             {
                 if (CompiledBinary[i] != target.CompiledBinary[i])
                 {
-                    return CompareResult.Unmatch;
+                    return i >= GetMemoOffset(CompiledBinary) ? CompareResult.Match_WithoutMemo : CompareResult.Unmatch;
                 }
             }
 
             return CompiledBinary.Length == target.CompiledBinary.Length ? CompareResult.Match : CompareResult.Match_NotEqualLength;
+        }
+
+        public int GetMemoOffset(byte[] array)
+        {
+            if (array.Length < 0x1a || array[1] != 0x1a)
+            {
+                return 0;
+            }
+
+            return array[0x19] + array[0x1a] * 256 - 4 + 1;
         }
     }
 }
