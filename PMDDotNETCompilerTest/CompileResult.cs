@@ -70,6 +70,7 @@ namespace PMDDotNETCompilerTest
         public CompareResult Compare(CompileResult target)
         {
             if (Status == CompileStatus.Failed || target.Status == CompileStatus.Failed ||
+                Status == CompileStatus.Exception || target.Status == CompileStatus.Exception ||
                 CompiledBinary == null || target.CompiledBinary == null)
             {
                 return CompareResult.Unspecified;

@@ -22,11 +22,7 @@ namespace PMDDotNETCompilerTest
         [Description("Test MML Directory")]
         public void Test([FromService] PMDCompileTestService service, [Argument] string dir, string tooldir = ".")
         {
-            var mmls = Directory.EnumerateFiles(dir, "*.mml", SearchOption.AllDirectories);
-            foreach (var mml in mmls)
-            {
-                service.SingleTest(mml, tooldir);
-            }
+            service.MultiTest(dir, tooldir);
         }
     }
 }
