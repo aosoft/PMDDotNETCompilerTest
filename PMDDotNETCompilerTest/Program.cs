@@ -11,7 +11,7 @@ namespace PMDDotNETCompilerTest
         static void Main(string[] args)
         {
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
-            CoconaLiteApp.Run<Program>(args);
+            CoconaApp.Run<Program>(args);
         }
 
         [Description("Test MML Directory")]
