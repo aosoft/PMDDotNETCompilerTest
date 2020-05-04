@@ -35,21 +35,45 @@ namespace PMDDotNETCompilerTest
                     var stderr = p.StandardError.ReadToEnd();
                     p.WaitForExit();
 
-                    if (p.ExitCode == 0)
+                    string? outputFileName2 = null;
+                    if (File.Exists(outputFileName))
                     {
-                        byte[] buffer;
-                        using (var fs = new FileStream(outputFileName, FileMode.Open))
-                        {
-                            buffer = new byte[fs.Length];
-                            fs.Read(buffer, 0, buffer.Length);
-                        }
-                        File.Delete(outputFileName);
-
-                        return (buffer, stdout, stderr);
+                        outputFileName2 = outputFileName;
                     }
                     else
                     {
-                        return (null, stdout, stderr);
+                        //  拡張子のみファイルが生成されるパターンがある?
+                        var ext = Path.GetExtension(outputFileName);
+                        if (File.Exists(ext))
+                        {
+                            outputFileName2 = ext;
+                        }
+                    }
+
+                    try
+                    {
+                        if (p.ExitCode == 0 && outputFileName2 != null && File.Exists(outputFileName2))
+                        {
+                            byte[] buffer;
+                            using (var fs = new FileStream(outputFileName, FileMode.Open))
+                            {
+                                buffer = new byte[fs.Length];
+                                fs.Read(buffer, 0, buffer.Length);
+                            }
+
+                            return (buffer, stdout, stderr);
+                        }
+                        else
+                        {
+                            return (null, stdout, stderr);
+                        }
+                    }
+                    finally
+                    {
+                        if (outputFileName2 != null && File.Exists(outputFileName2))
+                        {
+                            File.Delete(outputFileName2);
+                        }
                     }
                 }
             }
